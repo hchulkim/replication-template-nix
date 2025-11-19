@@ -40,6 +40,7 @@ Sometimes this is useful for collaborating and writing papers. But you should do
 This workflow requires:
 - [Bash](https://www.gnu.org/software/bash/) [Free]
 - [R](https://www.r-project.org/) [Free]
+- [nix/rix](https://docs.ropensci.org/rix/articles/a-getting-started.html)[Free]
 
 Other great languages and softwares may also be used.
 - [Julia](https://julialang.org/) [Free]
@@ -52,10 +53,23 @@ For now, it is only adapted for Linux or OSX (Apple) environments. But feel free
 
 #### Dependency management
 
-It is important to set up dependency management for the programming languages we use for replication and reproducibility. Here are lists of management program that I use:
+It is important to set up dependency management for the programming languages we use for replication and reproducibility. I mainly use `rix` R package that leverage `nix` package manager which focuses on reproducible builds. `nix` allows you to create project-specific environments and ensures full reproducibility.
 
-- `R`: I use `renv` package.
-- `Julia`: I just use `Pkg`.
+If you want to know more about `rix/nix`, start from here: [https://docs.ropensci.org/rix/index.html](https://docs.ropensci.org/rix/index.html).
+
+**TIP**: After following installation instructions on [https://docs.ropensci.org/rix/index.html](https://docs.ropensci.org/rix/index.html), add this into your `/etc/nix/nix.custom.conf` before installing `cachix` client and configuring `rstats-on-nix` cache:
+
+```
+trusted-users = root [NAME OF THE USER FOR YOUR COMPUTER]
+```
+
+After that, run this command in the terminal and then do the `chachix` installation and configuration for `rstats-on-nix` cache.
+
+```
+sudo systemctl restart nix-daemon
+```
+
+This will prevent some warnings from popping up when you use `nix-shell`.
 
 ## 2. Folders
 
@@ -89,10 +103,8 @@ It is important to set up dependency management for the programming languages we
 
 Some sections in this template may need to be updated in the future. I’ll periodically handle the updates, but if any issues arise, please check whether they are related to these sections.
 
-1. `.Rprofile`: Currently, this profile uses Ubuntu 24.04 *(noble)* as the repo. If you have different Ubuntu version, change this repo.
-2. `Dockerfile_r_julia_quarto`: Currently, this `Dockerfile` use different methods to install `tinytex` for ARM64 architecture. This is because as of this moment `quarto install tinytex` does not work for ARM64. If this changes (I think `quarto` team is trying to implement this command for ARM64 as well), you just need to put `quarto install tinytex` instead of having the bulky if statement. Also, you probably would not need to add tinytex to the current PATH as well. This is solved when you just use `quarto install tinytex`.
-3. `Dockerfile_r_julia_quarto`: Currently, I am using `https://ctan.math.illinois.edu/systems/texlive/tlnet` as the CTAN mirror for downloading tex packages. The problem is that some CTAN mirrors get stale. If this affects the current mirror, you might need to assign new CTAN mirror.
-4. `Dockerfile`: Currently, I am installing 1.1.5.9000 development version of `renv` package. If you want to install something else, change it.
+1. `Dockerfile`: You can run the `Dockerfile` to create a container for your project.
+2. `.github/workflows/`: You can use GitHub actions to automate your project build process.
 
 For more information on some trials and errors related to the `Dockerfile`, check this [blog post](https://hchulkim.github.io/posts/dockerfile-trial/)
 
@@ -139,7 +151,7 @@ Hyoungchul Kim (2025). "Data for 000" https://github.com/hchulkim/replication-te
 
 ## Data Availability and Provenance Statements
 
-**IMPORTANT**: Note that this GitHub repo does not provide the `data/` folder due to the large size of the datasets. They are provided [HERE]. While we do not list all the coding packages we use in our analysis (they are listed in our `renv.lock` file), we do list some important packages that were essential components of our analysis for transparency.
+**IMPORTANT**: Note that this GitHub repo does not provide the `input/` (data) folder due to the large size of the datasets. They are provided [HERE]. While we do not list all the coding packages we use in our analysis (they are listed in our `renv.lock` file), we do list some important packages that were essential components of our analysis for transparency.
 
 | Data.Name  | Data.Files | Location | Provided | Availability statement |
 | -- | -- | -- | -- | -- | 
@@ -183,28 +195,18 @@ This replication package's expected run-time is 000.
 
 Portions of the code use bash scripting, which may require Linux or Unix-like terminal
 
-### System Dependencies (only for Linux)
+### Reproducible environments (system dependencies)
 
-Some R packages used here could require external system libraries. On Linux, these must be installed manually. To identify required system packages:
+- The project uses the [`rix`]([https://rstudio.github.io/renv/](https://docs.ropensci.org/rix/index.html)) package to manage and isolate package dependencies. Follow the instructions in the link to install and run `nix` and `rix`.
 
-```r
-remotes::system_requirements(os = 'ubuntu', os_release = '16.04',
-                             path = 'renv/library/R-3.4/x86_64-pc-linux-gnu/sf/')
-```
+To initialize the environment run this in the terminal:
 
-### R and R Libraries
+```bash
+# Restore the project environment
+nix-build
 
-- Tested using **R 4.5.0**.
-- The project uses the [`renv`](https://rstudio.github.io/renv/) package to manage and isolate package dependencies.
-
-To initialize the environment:
-
-```r
-# Only needed if not already initialized
-# renv::init()
-
-# Restore the snapshot environment
-renv::restore()
+# Start the project environment nix shell
+nix-shell
 ```
 
 ## Description of programs/code
@@ -222,7 +224,7 @@ renv::restore()
 
 **IMPORTANT**: Note that this GitHub repo does not provide the `data/` folder due to the large size of the datasets. They are provided [HERE].
 
-Assuming that you've met the "Computational requirements" above, you can use `git clone` to download this repository. After that, open the R project file and use `renv::restore()` to install the packages in project library. This ensures that the dependencies for the R packages are consistent. You might have to first install `renv` package if you don't have it yet. If you have an issue with the `concordance` R package, you might also need to install `devtools` and follow the instructions in the "Computational requirements."
+Assuming that you've met the "Computational requirements" above, you can use `git clone` to download this repository. After that, install `nix` and `rix`. Then open the terminal and use `nix-build` to restore the project environment. Finally type `nix-shell` in the terminal to open the project environment.
 
 The entire pipeline now can be executed using the **`Makefile`** master script:
 
