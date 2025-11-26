@@ -224,7 +224,13 @@ nix-shell
 
 **IMPORTANT**: Note that this GitHub repo does not provide the `data/` folder due to the large size of the datasets. They are provided [HERE].
 
-Assuming that you've met the "Computational requirements" above, you can use `git clone` to download this repository. After that, install `nix` and `rix`. Then open the terminal and use `nix-build` to restore the project environment. Finally type `nix-shell` in the terminal to open the project environment.
+### Using Docker
+
+Assuming that you've met the "Computational requirements" above, you can use `git clone` to download this repository. 
+
+### Not using Docker
+
+Assuming that you've met the "Computational requirements" above, you can use `git clone` to download this repository. Install `nix` and `rix`. Then open the terminal and use `nix-build` to restore the project environment. Finally type `nix-shell` in the terminal to open the project environment.
 
 The entire pipeline now can be executed using the **`Makefile`** master script:
 
@@ -258,7 +264,7 @@ If preferred, users can run the R scripts manually in sequence by navigating to 
 - `code/13-descriptive.R`: creates miscellaneous results (descriptive analysis, country map, etc) for our paper.
 
 
-## List of tables and programs
+## List of tables, figures and programs
 
 All table results are in folder `output/tables` and all figure results are in folder `output/figures`.
 
