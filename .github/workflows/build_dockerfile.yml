@@ -24,7 +24,7 @@ jobs:
     - name: Docker Run Action
       run: > 
         docker run --rm --name replication_container -v
-        /github/workspace/shared_folder:shared_folder:rw 
+        /github/workspace/shared_folder:/shared_folder:rw 
         replication_image
 
     - uses: actions/upload-artifact@v4
