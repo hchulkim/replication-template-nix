@@ -17,7 +17,7 @@ all: $(tabsdir)example_output.csv
 
 ## example 
 $(tabsdir)example_output.csv: src/lorem.R
-	Rscript src/lorem.R
+	nix-shell --run "Rscript src/lorem.R"
 
 ## Draw the Makefile DAG
 ## Requires: https://github.com/lindenb/makefile2graph
