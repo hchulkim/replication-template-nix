@@ -167,6 +167,10 @@ Hyoungchul Kim (2025). "Replication template with nix" https://github.com/hchulk
 | "Crosswalk between KSIC 8, 9, 10 codes" | `ksic9_10.xlsx`; `ksic8_9.xls`; `ksic_old.xls`  | `data/concordance/ksic` | TRUE | Industry classification crosswalks were obtained from the official Korean Standard Industrial Classification (KSIC) system, maintained by Statistics Korea. Specifically, we used the KSIC version conversion tables available at the KSIC website ([https://kssc.kostat.go.kr:8443/ksscNew_web/index.jsp#](https://kssc.kostat.go.kr:8443/ksscNew_web/index.jsp#)). These files provide official mappings between different versions of the KSIC system and are publicly available without login. For computational purposes, we only modified the original file name to an English name after downloading; the content of the data remains unchanged. A copy of the KSIC conversion file used in this study is included as part of this archive. |
 | "Crosswalk between *change in administrative districts of South Korea over the years* and between *institutional differences in region codes*" | `region_stat.xlsx`; `region_kosis.xlsx` | `data/concordance/region` | TRUE | Due to (1) changes in administrative district boundaries and (2) differing numeric codes assigned by two institutions in South Korea—Statistics Korea and the Ministry of the Interior and Safety—it is necessary to establish a consistent concordance of districts in the data. We also need to crosswalk region codes provided by different institutions. In order to accomplish this, the authors have created their own crosswalk tables which is based on [https://kssc.kostat.go.kr:8443/ksscNew_web/index.jsp#](https://kssc.kostat.go.kr:8443/ksscNew_web/index.jsp#). `region_stat.xlsx` table crosswalks the changes in administrative district and `region_kosis.xlsx` crosswalks two different region codes provided by two institutions. In the end, an unique code was assigned to each unit of analysis to ensure consistency across the timeline. For more detail on this matter, you can check out the Appendix in the paper. We have also included files related to this crosswalk in this archive. |
 
+## Replication package expected run-time
+
+This replication package's expected run-time is 000.
+
 ## Computational requirements
 
 We strongly suggest following the requirements to install and set up the environment to run the analysis.
@@ -181,10 +185,6 @@ The code was last run on a **Intel-based laptop with Linux Ubuntu 22.04.5 LTS (J
 - Socket(s):                            1 
 
 The project takes up around 000GB of storage.
-
-## Replication package expected run-time
-
-This replication package's expected run-time is 000.
 
 ### OS-Specific Considerations
 
