@@ -39,6 +39,12 @@ RUN nix-build
 # Now move all folders into the environment
 COPY . .
 
-# Finally, we run makefile using `nix-shell`. This will get executed when running
+# make shared folder
+RUN mkdir -p shared_folder
+
+# We run makefile using `nix-shell`. 
+RUN nix-shell --run "make all"
+
+# FInally, we move the output results into shared folder. This will get executed when running
 # containers from this image. You can of course put anything in here
-CMD ["nix-shell", "--run", "make all"]
+CMD ["sh", "-c", "mv output/* shared_folder/"]
