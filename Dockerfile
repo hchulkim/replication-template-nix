@@ -36,6 +36,9 @@ RUN nix-shell --run "Rscript generate_env.R"
 # We now build the environment
 RUN nix-build
 
-# Finally, we run `nix-shell`. This will get executed when running
+# Now move all folders into the environment
+COPY . .
+
+# Finally, we run makefile using `nix-shell`. This will get executed when running
 # containers from this image. You can of course put anything in here
-CMD nix-shell
+CMD ["nix-shell", "--run", "make all"]
