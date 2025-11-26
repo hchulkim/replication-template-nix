@@ -12,6 +12,9 @@ RUN curl -O https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/def
 # Copy a script to generate the environment of interest using {rix}
 COPY generate_env.R .
 
+# Now move all folders into the environment
+COPY . .
+
 # The next 4 lines install Nix inside Docker. See the Determinate Systems installer's documentation
 RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
   --extra-conf "sandbox = false" \
@@ -35,9 +38,6 @@ RUN nix-shell --run "Rscript generate_env.R"
 
 # We now build the environment
 RUN nix-build
-
-# Now move all folders into the environment
-COPY . .
 
 # make shared folder
 RUN mkdir -p shared_folder
