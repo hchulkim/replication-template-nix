@@ -146,7 +146,7 @@ For a more detailed instructions, click this [link](https://aeadataeditor.github
 You can cite our repo using following notation:
 
 ```
-Hyoungchul Kim (2025). "Data for 000" https://github.com/hchulkim/replication-template/
+Hyoungchul Kim (2025). "Replication template with nix" https://github.com/hchulkim/replication-template-nix
 ```
 
 ## Data Availability and Provenance Statements
