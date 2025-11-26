@@ -5,10 +5,17 @@
 # Task: R script that creates nix/rix environment. You need to have here and rix R packages to run this. You can actually run it without having any R related packages and even R. If interested, read the vignettes of rix R package.
 # -----------------------------------------------------------------------------
 
-
+# when using local machine with here R package
+if (FALSE) {
 library(here)
 
 path_default_nix <- here() 
+}
+
+# when using Docker
+if (TRUE) {
+path_default_nix <- tempdir()
+}
 
 library(rix)
 
