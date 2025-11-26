@@ -13,9 +13,7 @@ path_default_nix <- here()
 }
 
 # when using Docker
-if (TRUE) {
-path_default_nix <- tempdir()
-}
+if (TRUE) { path_default_nix <- "." }
 
 library(rix)
 
