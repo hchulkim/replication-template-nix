@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 # when using local machine with here R package
-if (require(here)) {
+if (require("here")) {
     # when you have here R package in local R
     library(here)
     path_default_nix <- here() 
