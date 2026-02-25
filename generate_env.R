@@ -6,14 +6,14 @@
 # -----------------------------------------------------------------------------
 
 # when using local machine with here R package
-if (FALSE) {
-library(here)
-
-path_default_nix <- here() 
-}
-
-# when using Docker
-if (TRUE) { path_default_nix <- "." }
+if (require(here)) {
+    # when you have here R package in local R
+    library(here)
+    path_default_nix <- here() 
+} else {
+    # when using Docker
+    path_default_nix <- "."
+    }
 
 library(rix)
 
