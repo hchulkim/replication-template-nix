@@ -23,6 +23,11 @@ rix(date = "2025-11-24", # use `available_dates()` to get the snapshot date you 
 # list system packages to install:
     system_pkgs = c("quarto", "git"),
     git_pkgs = NULL,
+# list python packages to install:
+    py_conf = list(
+        py_version = "3.12",
+        py_pkgs = c("numpy", "pandas", "pyarrow", "statsmodels", "matplotlib")
+    ),
 # list julia packages to install:
     jl_conf = list(
       jl_version = "1.11",
