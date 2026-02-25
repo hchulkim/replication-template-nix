@@ -32,3 +32,5 @@ rix(date = "2025-11-24", # use `available_dates()` to get the snapshot date you 
     project_path = path_default_nix,
     overwrite = TRUE,
     print = TRUE)
+    # this shell_hook is not necessary unless you are using nvim-R
+    #shell_hook = "export R_LIBS=$HOME/R/library")
