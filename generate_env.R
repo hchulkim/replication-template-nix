@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
-# Initial date: 
-# Modified date: 
+# Initial date: 2026-02-25
+# Modified date: 2026-02-25
 # Maintainer: Hyoungchul Kim
 # Task: R script that creates nix/rix environment. You need to have here and rix R packages to run this. You can actually run it without having any R related packages and even R. If interested, read the vignettes of rix R package.
 # -----------------------------------------------------------------------------
