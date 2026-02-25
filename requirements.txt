@@ -1,0 +1,13 @@
+# Core scientific stack
+numpy>=1.24,<1.27          # fundamental array operations
+scipy>=1.10,<1.12         # numerical algorithms (optimizers, root solvers)
+sympy>=1.11,<1.12         # symbolic math (used in formulas)
+patsy>=0.5.3              # R-style formula parsing
+
+# pyblp and its direct companion
+pyblp==1.1.2              # PyBLP core package (latest stable) :contentReference[oaicite:0]{index=0}
+pyhdfe>=0.1.7             # high-dim fixed effects absorption (installed with pyblp) :contentReference[oaicite:1]{index=1}
+
+# Recommended extras (not strictly required, but often used)
+pandas>=1.5,<2.0          # for data frames and data manipulation
+matplotlib>=3.7,<3.8      # for plotting results
