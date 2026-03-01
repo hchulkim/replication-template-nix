@@ -67,3 +67,39 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Claude Code local state
+.claude/state/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+
+# Nix
+default.nix
+
+# Data and output (reproducible via pipeline)
+data/raw/*
+!data/raw/.gitkeep
+data/build/*
+!data/build/.gitkeep
+data/temp/*
+!data/temp/.gitkeep
+output/figures/*
+!output/figures/.gitkeep
+output/tables/*
+!output/tables/.gitkeep
+output/paper/*
+!output/paper/.gitkeep
+output/slides/*
+!output/slides/.gitkeep
