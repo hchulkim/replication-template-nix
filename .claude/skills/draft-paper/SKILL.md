@@ -20,12 +20,11 @@ Draft an academic economics paper (or specific section) by dispatching the **Wri
 
 Before dispatching the Writer:
 1. Read existing paper draft in `output/paper/` (if it exists)
-2. Read `master_supporting_docs/` for notes, outlines, research specs
-3. Read most recent `quality_reports/research_spec_*.md` or `quality_reports/lit_review_*.md`
-4. Read `.claude/rules/domain-profile.md` for field conventions
-5. Check `Bibliography_base.bib` for available citations
-6. Scan `output/tables/` and `output/figures/` for generated output
-7. Read `quality_reports/results_summary.md` if it exists (from Coder)
+2. Read most recent `quality_reports/research_spec_*.md` or `quality_reports/lit_review_*.md`
+3. Read `.claude/rules/domain-profile.md` for field conventions
+4. Check bibliography file for available citations
+5. Scan `output/*/tables/` and `output/*/figures/` for generated output
+6. Read `quality_reports/results_summary.md` if it exists (from Coder)
 
 ### Step 2: Section Routing
 

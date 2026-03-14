@@ -268,29 +268,58 @@ Before making ANY suggestion or diagnosis about code errors:
 4. If user reports an error, read surrounding code context FIRST
 
 ## Project Structure Standard
+
+**Key principle:** Only `code/` lives in GitHub. `data/` and `output/` live on Dropbox and are symlinked into the project. This keeps the repo lightweight.
+
+### What's in GitHub
 ```
 project-name/
-├── data/
-│   ├── raw/          # Original, immutable data
-│   ├── build/        # Intermediate data products
-│   └── temp/         # Temporary working files
 ├── code/
-│   ├── build/        # Data cleaning and construction
-│   └── analysis/     # Estimation and analysis scripts
-├── output/
-│   ├── figures/      # Publication-ready figures
-│   ├── tables/       # Publication-ready tables
-│   ├── paper/        # LaTeX/Quarto paper files
-│   └── slides/       # Beamer presentation files
-├── quality_reports/  # Plans, session logs, specs, merge reports
-├── explorations/     # Research sandbox (relaxed quality gates)
-├── templates/        # Session log, quality report, skill templates
-├── _extensions/      # Quarto extensions (aea template)
-├── .here             # Project root marker
-├── .claude/          # Rules, skills, agents, hooks
-├── Dockerfile        # Docker-based replication (Nix bootstrapped inside)
-├── Makefile          # Build automation
-└── generate_env.R    # rix/nix environment setup
+│   ├── build/                    # Data cleaning and construction
+│   │   ├── 01_issue_name/        # Numbered by GitHub issue
+│   │   └── 02_issue_name/
+│   └── analysis/                 # Estimation and analysis scripts
+│       ├── 01_issue_name/
+│       └── 02_issue_name/
+├── quality_reports/              # Plans, session logs, specs, merge reports
+├── explorations/                 # Research sandbox (relaxed quality gates)
+├── templates/                    # Session log, quality report, skill templates
+├── .here                         # Project root marker
+├── .claude/                      # Rules, skills, agents, hooks
+├── Dockerfile                    # Docker-based replication (Nix bootstrapped inside)
+├── Makefile                      # Build automation
+└── generate_env.R                # rix/nix environment setup
+```
+
+### What's on Dropbox (symlinked into project)
+```
+data/                             # ln -s ~/Dropbox/Projects/PROJECT/data data
+├── raw/                          # Original, immutable data
+├── build/                        # Intermediate data products
+│   ├── 01_issue_name/            # Matches code/build/ numbering
+│   └── 02_issue_name/
+└── temp/                         # Temporary working files
+
+output/                           # ln -s ~/Dropbox/Projects/PROJECT/output output
+├── 01_issue_name/                # Matches code/analysis/ numbering
+│   ├── tables/                   # Tables for this analysis
+│   └── figures/                  # Figures for this analysis
+├── 02_issue_name/
+│   ├── tables/
+│   └── figures/
+├── paper/                        # LaTeX/Quarto paper (NOT numbered)
+└── slides/                       # Beamer presentations (NOT numbered)
+```
+
+### Numbering convention
+Numbered folders (e.g., `01_`, `02_`) match **GitHub issues**. This creates traceability:
+- Issue #01 "Data cleaning" -> `code/build/01_data_cleaning/` -> `data/build/01_data_cleaning/`
+- Issue #02 "Main regression" -> `code/analysis/02_main_reg/` -> `output/02_main_reg/tables/` + `output/02_main_reg/figures/`
+
+### Symlink setup
+```bash
+ln -s ~/Dropbox/Projects/PROJECT_NAME/data data
+ln -s ~/Dropbox/Projects/PROJECT_NAME/output output
 ```
 
 ## Package Environment (rix / Nix)
@@ -323,7 +352,7 @@ rix(
 1. **Before writing or running any code**, execute `nix-shell` in the project root to enter the reproducible environment.
 2. **Adding a new package**: edit `generate_env.R` to include the package, re-run `Rscript generate_env.R`, then re-enter `nix-shell`. Never use `install.packages()` or equivalent.
 3. **Verification**: confirm the environment works by running `R -e "library(<pkg>)"` inside `nix-shell` for any newly added package.
-4. **Commit `generate_env.R` and `default.nix`** to version control so collaborators and replication reviewers can reproduce the environment exactly.
+4. **Commit `generate_env.R`** to version control. `default.nix` is generated and gitignored — collaborators regenerate it by running `Rscript generate_env.R`.
 
 ### Docker-Based Replication (Scaffolding Only -- Do Not Run)
 The Dockerfile below is included in every project for the user to run later when preparing replication packages or journal submissions. **The AI agent must never execute `docker build`, `docker run`, or any Docker commands.** It only needs to keep the Dockerfile in sync when project structure changes (e.g., updating `generate_env.R`). Every project should include a `Dockerfile` at the root:
@@ -478,7 +507,8 @@ mpl.rcParams.update({
 - Label axes clearly, include units
 
 ## Git Practices
-- `.gitignore` file: Add `data`, `output` folders and also add `result` folder.
+- `.gitignore` file: `data/`, `output/`, and `result/` are gitignored (they live on Dropbox).
+- Only `code/` and configuration files are tracked in git.
 
 ## Replication Package Checklist
 When preparing for replication:

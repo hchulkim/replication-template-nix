@@ -1,21 +1,23 @@
-# Quality Report: Merge to Main -- [Date]
+# Quality Report — YYYY-MM-DD [Branch Name]
 
 ## Summary
-[1-2 sentences: what was merged and why]
+[Brief description of what was merged]
 
-## Files Modified
-| File | Type | Quality Score |
-|------|------|---|
-| `path/to/file` | [Code/Slides/Config] | [N]/100 |
+## Changes
+- [File]: [what changed]
+
+## Quality Scores
+| Component | Score | Agent |
+|-----------|-------|-------|
+| [Component] | XX/100 | [Agent] |
 
 ## Verification
-- [ ] Compilation/execution succeeds
-- [ ] Tolerance checks PASS (if applicable)
-- [ ] Tests pass (if applicable)
-- [ ] Quality gates >= 80
+- [ ] Tests pass
+- [ ] Code runs without errors
+- [ ] Output files generated
 
-## Status
-MERGED
+## Issues Found
+- [Issue]: [severity] — [resolution]
 
-## Notes
-[Any learnings or follow-ups]
+## Lessons Learned
+- [LEARN:category] [lesson]

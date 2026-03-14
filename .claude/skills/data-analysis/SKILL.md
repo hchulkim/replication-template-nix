@@ -10,7 +10,7 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 
 Run an end-to-end data analysis by dispatching the **Coder** (implementer) and **Debugger** (code critic).
 
-**Input:** `$ARGUMENTS` — a dataset path (e.g., `data/build/panel.csv`) or a description of the analysis goal.
+**Input:** `$ARGUMENTS` — a dataset path (e.g., `data/build/01_clean/panel.csv`) or a description of the analysis goal.
 
 ---
 
@@ -21,7 +21,7 @@ Run an end-to-end data analysis by dispatching the **Coder** (implementer) and *
 1. Read `.claude/rules/domain-profile.md` for field conventions
 2. Read any strategy memo in `quality_reports/` (if analysis implements a pre-specified design)
 3. Check `CLAUDE.md` for language preference (R/Stata/Python/Julia)
-4. Scan existing scripts in `code/R/` (or `code/stata/`, etc.) for project patterns
+4. Scan existing scripts in `code/build/` and `code/analysis/` for project patterns
 
 ### Step 2: Launch Coder Agent
 
@@ -33,9 +33,9 @@ Follow 4 stages:
   Stage 0: Data cleaning (if raw data provided)
   Stage 1: Main specification (from strategy memo or user description)
   Stage 2: Robustness checks
-  Stage 3: Publication-ready output (tables to output/tables/, figures to output/figures/)
+  Stage 3: Publication-ready output (tables to output/NN_issue/tables/, figures to output/NN_issue/figures/)
 Produce results_summary.md with all estimates, SEs, and key statistics.
-Save scripts to code/R/ (or appropriate language directory).
+Save scripts to code/build/NN_issue/ or code/analysis/NN_issue/ (numbered by GitHub issue).
 ```
 
 The Coder follows these principles:
@@ -50,7 +50,7 @@ The Coder follows these principles:
 After Coder returns, delegate to the `debugger` agent:
 
 ```
-Prompt: Review the script(s) at code/R/[script_name].R.
+Prompt: Review the script(s) at code/analysis/NN_issue/[script_name].R.
 Run all 12 check categories:
   Strategic (1-3): code-strategy alignment, sanity checks, robustness sufficiency
   Code Quality (4-12): structure, console hygiene, reproducibility, functions,
@@ -70,7 +70,7 @@ If Debugger finds Critical or Major issues:
 Show the user:
 1. **Results summary** — key estimates with SEs and interpretation
 2. **Scripts created** — paths and descriptions
-3. **Output files** — tables in `output/tables/`, figures in `output/figures/`
+3. **Output files** — tables in `output/NN_issue/tables/`, figures in `output/NN_issue/figures/`
 4. **Code review score** — from Debugger
 5. **Any TODO items** — missing data, additional specifications needed
 

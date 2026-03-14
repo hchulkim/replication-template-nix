@@ -1,56 +1,27 @@
-# Requirements Specification: [Title]
+# Requirements Specification — YYYY-MM-DD [Title]
 
-**Date:** [YYYY-MM-DD]
-**Status:** DRAFT | APPROVED
-
----
-
-## Objective
-
-[One sentence: what success looks like]
-
----
+## Context
+[Why is this needed?]
 
 ## Requirements
 
-### MUST Have (Non-Negotiable)
+### MUST (non-negotiable)
+- [ ] [Requirement 1]
 
-- [ ] [Required feature or constraint]
-- [ ] [Required feature or constraint]
+### SHOULD (preferred)
+- [ ] [Requirement 2]
 
-### SHOULD Have (Preferred)
-
-- [ ] [Preferred feature or enhancement]
-- [ ] [Preferred feature or enhancement]
-
-### MAY Have (Optional, If Time)
-
-- [ ] [Nice-to-have enhancement]
-- [ ] [Nice-to-have enhancement]
-
----
+### MAY (optional)
+- [ ] [Requirement 3]
 
 ## Clarity Status
-
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| [Ambiguous aspect] | CLEAR / ASSUMED / BLOCKED | [How it was resolved or why it's assumed] |
-| [Another aspect] | CLEAR / ASSUMED / BLOCKED | [Explanation] |
+| [Aspect 1] | CLEAR / ASSUMED / BLOCKED | [Notes] |
 
-**Status Definitions:**
-- **CLEAR:** Fully specified, no ambiguity
-- **ASSUMED:** Reasonable assumption made in absence of clarity; user can override
-- **BLOCKED:** Cannot proceed until this is answered
+## Acceptance Criteria
+- [Criterion 1]
+- [Criterion 2]
 
----
-
-## Success Criteria
-
-- [Measurable criterion for completion]
-- [Measurable criterion for completion]
-
----
-
-## Approval
-
-[ ] User approved: [Date]
+## Dependencies
+- [Dependency]

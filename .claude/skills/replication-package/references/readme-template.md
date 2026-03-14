@@ -23,7 +23,7 @@ This repository contains the code and data required to replicate the findings in
 | Data Name | Files | Location | Provided | Citation |
 |-----------|-------|----------|----------|----------|
 | [Dataset 1] | `file1.csv` | `data/raw/` | Yes | [Citation] |
-| [Dataset 2] | `file2.dta` | `data/raw/` | No | [Citation] |
+| [Dataset 2] | `file2.dta` | `data/raw/` | No  | [Citation] |
 
 **[Dataset 1]**: [Description of data, how to access, any restrictions]
 
@@ -77,14 +77,16 @@ Approximate time breakdown:
 ```
 code/
 ├── build/
-│   ├── 01-clean-data.R      # Cleans raw data
-│   ├── 02-merge-data.R      # Merges datasets
-│   └── 03-construct-vars.R  # Creates analysis variables
+│   └── 01_clean_data/
+│       ├── 01_clean.R         # Cleans raw data
+│       └── 02_merge.R         # Merges datasets
 └── analysis/
-    ├── 01-main-regressions.R  # Tables 1-3
-    ├── 02-event-study.R       # Figure 1
-    ├── 03-robustness.R        # Appendix Tables A1-A3
-    └── 04-heterogeneity.R     # Tables 4-5
+    ├── 01_main_reg/
+    │   └── 01_baseline.R      # Tables 1-3
+    ├── 02_event_study/
+    │   └── 01_event.R         # Figure 1
+    └── 03_robustness/
+        └── 01_robust.R        # Appendix Tables A1-A3
 ```
 
 ### License for Code
@@ -130,18 +132,18 @@ nix-shell --run "make paper"     # Compile paper
 ### Verifying Outputs
 
 After running, compare:
-- `output/tables/` with tables in the paper
-- `output/figures/` with figures in the paper
+- `output/*/tables/` with tables in the paper
+- `output/*/figures/` with figures in the paper
 
 ## List of Tables and Programs
 
 | Table/Figure | Program | Output File |
 |--------------|---------|-------------|
-| Table 1 | `code/analysis/01-main-regressions.R` | `output/tables/tab1.tex` |
-| Table 2 | `code/analysis/01-main-regressions.R` | `output/tables/tab2.tex` |
-| Figure 1 | `code/analysis/02-event-study.R` | `output/figures/fig1.pdf` |
-| Figure 2 | `code/analysis/02-event-study.R` | `output/figures/fig2.pdf` |
-| Table A.1 | `code/analysis/03-robustness.R` | `output/tables/tab_a1.tex` |
+| Table 1 | `code/analysis/01_main_reg/01_baseline.R` | `output/01_main_reg/tables/tab1.tex` |
+| Table 2 | `code/analysis/01_main_reg/01_baseline.R` | `output/01_main_reg/tables/tab2.tex` |
+| Figure 1 | `code/analysis/02_event_study/01_event.R` | `output/02_event_study/figures/fig1.pdf` |
+| Figure 2 | `code/analysis/02_event_study/01_event.R` | `output/02_event_study/figures/fig2.pdf` |
+| Table A.1 | `code/analysis/03_robustness/01_robust.R` | `output/03_robustness/tables/tab_a1.tex` |
 
 ## References
 

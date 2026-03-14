@@ -19,14 +19,14 @@ Render Quarto slides and sync all files to `docs/` for GitHub Pages deployment.
 2. **Verify deployment:**
    - Check that HTML files exist in `docs/slides/`
    - Check that `_files/` directories were copied (RevealJS assets)
-   - Check that `docs/output/figures/` was synced from `output/figures/`
+   - Check that `docs/output/figures/` was synced from `output/*/figures/`
 
 3. **Verify interactive charts** (if applicable):
    - Grep rendered HTML for interactive widget count
    - Confirm count matches expected
 
 4. **Verify TikZ SVGs** (if applicable):
-   - Check that all referenced SVG files exist in `docs/output/figures/LectureN/`
+   - Check that all referenced SVG files exist in `docs/output/figures/`
 
 5. **Open in browser** for visual verification:
    - `open docs/slides/LectureX_Name.html`
@@ -38,4 +38,4 @@ Render Quarto slides and sync all files to `docs/` for GitHub Pages deployment.
 - Renders all `.qmd` files in `Quarto/` (skips `*_backup*` files)
 - Copies HTML and `_files/` directories to `docs/slides/`
 - Copies Beamer PDFs from `output/slides/` to `docs/slides/`
-- Syncs `output/figures/` to `docs/output/figures/` using rsync
+- Syncs `output/*/figures/` to `docs/output/figures/` using rsync

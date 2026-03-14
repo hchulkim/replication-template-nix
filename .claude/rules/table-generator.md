@@ -140,13 +140,12 @@ kbl(df, format = "latex", booktabs = TRUE, escape = FALSE,
 
 ```r
 # Write .tex fragment (no \begin{table} wrapper -- added in main.tex)
-writeLines(tex_output, file.path("paper/tables", "reg_main_specification.tex"))
-writeLines(tex_output, file.path("results/tables", "reg_main_specification.tex"))
+writeLines(tex_output, here("output", "01_main_reg", "tables", "reg_main_specification.tex"))
 ```
 
 - Output **bare `tabular` environment** (no `\begin{table}` float)
 - The paper's `main.tex` wraps it with `\begin{table}`, `\caption{}`, and `\input{}`
-- Always write to both `paper/tables/` and `results/tables/`
+- Save to the numbered output folder matching the analysis issue
 
 ## 9. File Naming
 

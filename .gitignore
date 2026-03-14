@@ -1,16 +1,21 @@
-# macos file
+# macOS
 .DS_Store
 
 # nix
 result
+default.nix
 
-# renv folder
+# renv (if used)
 renv/
 renv.lock
 
-# input folder
-**/input
-**/input/
+# Data and output live on Dropbox, not in git
+data/
+output/
+
+# Symlinks to Dropbox (don't track the links themselves)
+# Users create these manually: ln -s ~/Dropbox/Projects/PROJECT/data data
+# Users create these manually: ln -s ~/Dropbox/Projects/PROJECT/output output
 
 # Rprofile
 .Rprofile
@@ -45,7 +50,7 @@ renv.lock
 vignettes/*.html
 vignettes/*.pdf
 
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+# OAuth2 token
 .httr-oauth
 
 # knitr and R markdown default cache directories
@@ -85,21 +90,9 @@ rsconnect/
 *.snm
 *.vrb
 
-# Nix
-default.nix
-
-# Data and output (reproducible via pipeline)
-data/raw/*
-!data/raw/.gitkeep
-data/build/*
-!data/build/.gitkeep
-data/temp/*
-!data/temp/.gitkeep
-output/figures/*
-!output/figures/.gitkeep
-output/tables/*
-!output/tables/.gitkeep
-output/paper/*
-!output/paper/.gitkeep
-output/slides/*
-!output/slides/.gitkeep
+# Python
+__pycache__/
+*.pyc
+.venv/
+pyproject.toml
+uv.lock

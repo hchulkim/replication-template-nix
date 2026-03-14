@@ -34,5 +34,5 @@ A creator cannot evaluate the quality of its own work. The score always comes fr
 ## Enforcement
 
 The Orchestrator flags violations:
-- If a critic invocation produces a file in `code/`, `output/paper/`, or `output/slides/` → flag
+- If a critic invocation produces a file in `code/`, `output/paper/`, `output/slides/`, or `output/*/tables/` → flag
 - If a creator reports its own score → discard, dispatch critic

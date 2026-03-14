@@ -2,6 +2,8 @@
 paths:
   - "output/paper/**/*.tex"
   - "output/slides/**/*.tex"
+  - "output/*/tables/**"
+  - "output/*/figures/**"
   - "code/**/*.R"
   - "code/**/*.do"
   - "code/**/*.py"

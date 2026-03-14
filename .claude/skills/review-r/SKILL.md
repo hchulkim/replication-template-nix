@@ -16,7 +16,7 @@ In standalone mode, the Debugger runs **categories 4-12 only** (code quality). C
 ### Step 1: Identify Scripts
 
 - If `$ARGUMENTS` is a specific file: review that file only
-- If `$ARGUMENTS` is `all`: review all scripts in `code/R/`, `code/stata/`, `code/python/`, `code/julia/`
+- If `$ARGUMENTS` is `all`: review all scripts in `code/build/` and `code/analysis/`
 - If `$ARGUMENTS` is a directory: review all scripts in that directory
 
 ### Step 2: Launch Debugger Agent

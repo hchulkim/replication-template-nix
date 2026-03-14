@@ -19,7 +19,6 @@ Structure a point-by-point response to referee reports with classification, agen
 ### Step 1: Parse Inputs
 
 1. Read referee report(s) from `$ARGUMENTS`
-   - Check `master_supporting_docs/` if path not explicit
    - Support multiple reports (Referee 1, Referee 2, Editor)
 2. Read the paper (`output/paper/main.tex` or specified path)
 3. Read `.claude/rules/revision-protocol.md` for routing rules

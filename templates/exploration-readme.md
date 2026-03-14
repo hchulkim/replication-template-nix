@@ -1,20 +1,21 @@
-# [Project Name]
+# Exploration: [Name]
 
 ## Goal
-[1-2 sentence description]
+[What are we exploring?]
 
 ## Status
-[IN PROGRESS / COMPLETED / ABANDONED] (started [DATE])
+[active / completed / abandoned]
 
-## Hypotheses to Test
-1. [Hypothesis 1]
-2. [Hypothesis 2]
+## Approach
+[Brief description]
 
-## Success Criteria
-- [Something you can measure]
+## Key Findings
+- [Finding 1]
 
-## Findings
-(Updated as work progresses)
+## Next Steps
+- [ ] [Step 1]
 
-## Timeline
-- [DATE]: Started exploration
+## Decision
+- [ ] Graduate to production (quality >= 80, tests pass)
+- [ ] Keep exploring
+- [ ] Archive (explain why)

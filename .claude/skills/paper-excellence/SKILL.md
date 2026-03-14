@@ -19,7 +19,7 @@ Run all review agents in parallel for a comprehensive paper quality assessment. 
 ### Step 1: Identify Targets
 
 - If `$ARGUMENTS` is a `.tex` file: review that file
-- If `$ARGUMENTS` is `all`: review `output/paper/main.tex` + all scripts in `code/R/`
+- If `$ARGUMENTS` is `all`: review `output/paper/main.tex` + all scripts in `code/analysis/`
 - Also scan for `output/slides/*.tex` for auxiliary scoring
 
 ### Step 2: Gather Context
@@ -36,14 +36,14 @@ Launch up to 4 agents simultaneously via Task tool:
 **Agent 1: Econometrician** (subagent_type: econometrician)
 ```
 Review [paper.tex] through all 4 phases: claim, design validity, inference, polish.
-Also check scripts in code/R/ for code-theory alignment.
+Also check scripts in code/analysis/ for code-theory alignment.
 Save report to quality_reports/[file]_econometrics_review.md
 ```
 **Weight:** Identification 25% of aggregate score.
 
 **Agent 2: Debugger** (subagent_type: general-purpose, with debugger agent instructions)
 ```
-Review all scripts in code/R/ for code quality and correctness.
+Review all scripts in code/analysis/ for code quality and correctness.
 Run categories 4-12 (code quality) plus categories 1-3 (strategic) if strategy memo exists.
 Save report to quality_reports/[script]_code_review.md
 ```

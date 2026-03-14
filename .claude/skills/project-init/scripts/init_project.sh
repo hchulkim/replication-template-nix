@@ -21,10 +21,11 @@ write_if_missing() {
 }
 
 # ---- directory structure ----
-mkdir -p "$PROJECT_PATH"/{code/{build,analysis},data/{raw,build,proc},output/{figures,tables,paper}}
+# Only code/ lives in GitHub. data/ and output/ live on Dropbox (symlinked).
+mkdir -p "$PROJECT_PATH"/code/{build,analysis}
 
 # .gitkeep files (safe: touch won't alter existing files)
-for dir in code/build code/analysis data/raw data/build data/proc output/figures output/tables output/paper; do
+for dir in code/build code/analysis; do
     touch "$PROJECT_PATH/$dir/.gitkeep"
 done
 
@@ -34,22 +35,14 @@ touch "$PROJECT_PATH/.here"
 # ---- .gitignore ----
 if write_if_missing "$PROJECT_PATH/.gitignore"; then
 cat > "$PROJECT_PATH/.gitignore" << 'EOF'
-# Data
-data/raw/*
-data/build/*
-data/proc/*
-!data/*/.gitkeep
-
-# Outputs
-output/tables/*.tex
-output/tables/*.html
-output/figures/*.pdf
-output/figures/*.png
-!output/*/.gitkeep
+# Data and output live on Dropbox, not in git
+data/
+output/
 
 # Nix
 result
 result-*
+default.nix
 .direnv/
 
 # R
@@ -170,30 +163,37 @@ if write_if_missing "$PROJECT_PATH/Makefile"; then
 cat > "$PROJECT_PATH/Makefile" << 'EOF'
 .PHONY: all clean data analysis paper
 
+codedir   = code/
+builddir  = code/build/
+analysdir = code/analysis/
+datadir   = data/
+outputdir = output/
+
 all: analysis
 
 # ============== DATA ==============
-data/proc/analysis.rds: code/build/01-build-data.R
+$(datadir)build/01_clean_data/analysis.rds: $(builddir)01_clean_data/01_clean.R
 	nix-shell --run "Rscript $<"
 
-data: data/proc/analysis.rds
+data: $(datadir)build/01_clean_data/analysis.rds
 
 # ============== ANALYSIS ==============
-output/tables/main.tex output/figures/main.pdf: code/analysis/01-main.R data/proc/analysis.rds
+$(outputdir)01_main_reg/tables/main.tex: $(analysdir)01_main_reg/01_baseline.R $(datadir)build/01_clean_data/analysis.rds
 	nix-shell --run "Rscript $<"
 
-analysis: output/tables/main.tex
+analysis: $(outputdir)01_main_reg/tables/main.tex
 
 # ============== PAPER ==============
-paper: output/paper/paper.pdf
+paper: $(outputdir)paper/paper.pdf
 
-output/paper/paper.pdf: output/paper/paper.qmd analysis
+$(outputdir)paper/paper.pdf: $(outputdir)paper/paper.qmd analysis
 	nix-shell --run "quarto render $<"
 
 # ============== CLEAN ==============
 clean:
-	rm -f data/build/* data/proc/*
-	rm -f output/tables/* output/figures/*
+	rm -f $(datadir)build/*/*.rds
+	rm -f $(outputdir)*/tables/*.tex
+	rm -f $(outputdir)*/figures/*.pdf
 EOF
 fi
 
@@ -237,17 +237,16 @@ nix-shell --run "make all"
 ## Structure
 
 \`\`\`
-├── code/
-│   ├── build/      # Data construction
-│   └── analysis/   # Analysis scripts
-├── data/
-│   ├── raw/        # Original data
-│   ├── build/      # Intermediate
-│   └── proc/       # Analysis-ready
-└── output/
-    ├── figures/
-    ├── tables/
-    └── paper/
+├── code/               # In GitHub
+│   ├── build/          # Data construction (numbered by issue)
+│   └── analysis/       # Analysis scripts (numbered by issue)
+├── data/               # On Dropbox (symlinked)
+│   ├── raw/            # Original data
+│   └── build/          # Intermediate (numbered by issue)
+└── output/             # On Dropbox (symlinked)
+    ├── 01_issue_name/  # Numbered (tables/ + figures/)
+    ├── paper/          # NOT numbered
+    └── slides/         # NOT numbered
 \`\`\`
 EOF
 fi

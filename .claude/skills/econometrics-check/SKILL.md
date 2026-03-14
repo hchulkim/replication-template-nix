@@ -18,7 +18,7 @@ Determine target from `$ARGUMENTS`:
 - **`.tex` file:** Review paper for identification claims, assumption statements, estimation descriptions
 - **`strategy-memo-*.md`:** Review strategy memo BEFORE code is written (early design check)
 - **`.R` / `.do` / `.py` / `.jl` file:** Review script for code-theory alignment, package usage, SE computation
-- **Directory (e.g., `code/R/`):** Review all scripts, then synthesize
+- **Directory (e.g., `code/analysis/`):** Review all scripts, then synthesize
 - **No argument:** Review `output/paper/main.tex` if it exists, else ask user
 
 ### Step 2: Context Gathering

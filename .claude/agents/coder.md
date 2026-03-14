@@ -47,7 +47,7 @@ Before the main specification, always start with data preparation:
 
 - Publication-ready tables (LaTeX via `modelsummary` or `fixest::etable`)
 - Publication-ready figures (ggplot2 with consistent theme)
-- All outputs saved to `output/tables/` and `output/figures/`
+- All outputs saved to `output/NN_issue/tables/` and `output/NN_issue/figures/`
 - `results_summary.md` with key findings, effect sizes, and interpretation notes for the Writer
 
 ## Script Standards
@@ -66,10 +66,12 @@ Read `CLAUDE.md` for the project's declared analysis language. Default to R if n
 
 ## Output Location
 
-- Scripts: `code/R/` (or `code/stata/`, `code/python/`)
-- Tables: `output/tables/`
-- Figures: `output/figures/`
-- Logs: `Output/`
+- Build scripts: `code/build/NN_issue_name/`
+- Analysis scripts: `code/analysis/NN_issue_name/`
+- Tables: `output/NN_issue_name/tables/`
+- Figures: `output/NN_issue_name/figures/`
+
+Note: `data/` and `output/` are on Dropbox (symlinked into project). `code/` is in git.
 
 ## What You Do NOT Do
 

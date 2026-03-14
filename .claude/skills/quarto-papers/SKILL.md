@@ -80,7 +80,7 @@ BibTeX entry example (`bibliography.bib`):
 ```markdown
 @fig-results shows the main findings.
 
-![Main Results](output/figures/main.pdf){#fig-results}
+![Main Results](output/01_main_reg/figures/main.pdf){#fig-results}
 ```
 
 Or with code chunks:
@@ -111,7 +111,7 @@ As shown in @fig-timeseries, the effect...
 
 For LaTeX tables:
 ```markdown
-{{< include output/tables/main_results.tex >}}
+{{< include output/01_main_reg/tables/main_results.tex >}}
 
 See @tbl-main for regression results.
 ```
@@ -137,12 +137,12 @@ As discussed in @sec-data...
 
 ### Figures from files
 ```markdown
-![Caption](output/figures/figure1.pdf){#fig-label width=80%}
+![Caption](output/01_issue_name/figures/figure1.pdf){#fig-label width=80%}
 ```
 
 ### Tables from LaTeX files
 ```markdown
-{{< include output/tables/table1.tex >}}
+{{< include output/01_issue_name/tables/table1.tex >}}
 ```
 
 ### Raw LaTeX (when needed)

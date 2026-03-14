@@ -43,8 +43,8 @@ Rscript code/R/FILENAME.R 2>&1 | tail -20
 
 ### 3. File Integrity
 - Every `\input{}`, `\include{}` reference resolves to an existing file
-- Every referenced table in `output/tables/` exists
-- Every referenced figure in `output/figures/` exists
+- Every referenced table in `output/NN_issue/tables/` exists
+- Every referenced figure in `output/NN_issue/figures/` exists
 
 ### 4. Output Freshness
 - Timestamps of output files match latest script run

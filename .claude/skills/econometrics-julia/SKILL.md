@@ -19,7 +19,7 @@ using Statistics, StatsBase
 ## Data Handling (DataFrames.jl)
 ```julia
 # Read data
-df = CSV.read("data/raw/file.csv", DataFrame)
+df = CSV.read(joinpath(@__DIR__, "..", "data", "raw", "file.csv"), DataFrame)
 
 # Basic operations
 transform!(df, :x => (x -> x .* 100) => :x_scaled)

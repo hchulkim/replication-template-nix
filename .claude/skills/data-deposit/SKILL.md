@@ -18,11 +18,11 @@ Prepare an AEA Data Editor compliant replication package by dispatching the **Co
 
 ### Step 1: Inventory
 
-1. Read all scripts in `code/R/` (and `code/stata/`, `code/python/`, etc.)
-2. Parse data file references (`read.csv`, `readRDS`, `read_dta`, etc.)
+1. Read all scripts in `code/build/` and `code/analysis/`
+2. Parse data file references (`read.csv`, `readRDS`, `fread`, `read_dta`, etc.)
 3. Read existing README in `Replication/` if any
 4. Read paper (`output/paper/main.tex`) for table/figure list
-5. Scan `output/tables/` and `output/figures/` for output files
+5. Scan `output/*/tables/` and `output/*/figures/` for output files
 
 ### Step 2: Dispatch Coder for Package Assembly
 
