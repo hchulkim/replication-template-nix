@@ -20,13 +20,13 @@ nvim.schedule callback: .../R.nvim/lua/r/server.lua:34:
 Invalid 'chunk': expected Array, got String
 ```
 
-Two distinct issues stacked on top of each other:
+Three distinct issues stacked on top of each other:
 
 1. **R.nvim wants to install its companion R package `nvimcom`** into
    a writable R library on first use. Under `nix-shell`:
    - the system library is `/nix/store/...` (read-only),
-   - the user library `~/R/x86_64-pc-linux-gnu-library/4.4` does not
-     exist,
+   - the user library `~/R/x86_64-pc-linux-gnu-library/<R-ver>` does
+     not exist,
    - R.nvim is driving R non-interactively so the "Create it now?"
      prompt can never be answered,
    - **and** the `.Rprofile` that `rix::rix_init()` generates actively
@@ -34,14 +34,49 @@ Two distinct issues stacked on top of each other:
      you to add packages to `default.nix` instead — so even if the
      directory existed, the install would be blocked for purity.
 
-2. **R.nvim has a latent bug at `server.lua:34`**: when it tries to
+2. **rix's generated `.Rprofile` contains a latent R footgun** that,
+   on the exact configuration above, silently wipes `.libPaths()`
+   to `character(0)`. The offending block (from `rix::rix_init()`):
+
+   ```r
+   current_paths <- .libPaths()
+   userlib_paths <- Sys.getenv("R_LIBS_USER")
+   user_dir <- grep(paste(userlib_paths, collapse = "|"), current_paths, fixed = TRUE)
+   new_paths <- current_paths[-user_dir]
+   .libPaths(new_paths)
+   ```
+
+   The intent is reasonable — strip the user-wide library so nothing
+   leaks in from outside nix. The bug is in the last two lines:
+
+   - R auto-defaults `R_LIBS_USER` at startup to
+     `~/R/x86_64-pc-linux-gnu-library/<R-ver>`, **even when the user
+     never sets it**.
+   - If that directory does not exist, R does not add it to
+     `.libPaths()`.
+   - `grep(...)` then returns `integer(0)`.
+   - `current_paths[-integer(0)]` is a well-known R footgun: negative
+     indexing with an empty integer vector returns `character(0)`,
+     wiping **every** path, including our carefully-injected
+     project-local library and every nix-store package directory.
+   - `.libPaths(character(0))` then resets to R's bare defaults, so
+     the project library our `shellHook` just added has vanished
+     by the time R.nvim (or anything else) starts looking for
+     packages.
+
+   This is the real reason the "not writable, create it now?" prompt
+   ever fires: after the wipe, **no** writable library path remains
+   for R.nvim to target, so it falls back to the system default user
+   path which doesn't exist.
+
+3. **R.nvim has a latent bug at `server.lua:34`**: when it tries to
    *report* the failure from (1) it calls
    `vim.api.nvim_echo({ "\n" }, ...)` — passing an array containing a
    string where recent Neovim requires an array of
    `{text, hlgroup}` chunks. So the error reporter itself crashes,
    which is the `expected Array, got String` traceback. Fixing (1)
-   avoids triggering this code path; the underlying bug is still
-   worth reporting upstream.
+   and (2) avoids triggering this code path; the underlying bug is
+   still worth reporting upstream.
 
 ---
 
@@ -66,29 +101,46 @@ rix(
   project_path = ".",
   overwrite = TRUE,
   shell_hook = "
-    # Make R.nvim's vendored nvimcom package available without writing
-    # to a global R library. One-time install:
-    #   R CMD INSTALL --library=.Rlib \\
-    #     ~/.local/share/nvim/lazy/R.nvim/nvimcom
-    # rix's .Rprofile strips R_LIBS_USER but leaves R_LIBS_SITE alone.
     export R_LIBS_SITE=\"$PWD/.Rlib:$R_LIBS_SITE\"
+    mkdir -p \"$PWD/.Rlib\"
+    mkdir -p \"$HOME/R/x86_64-pc-linux-gnu-library/4.4\"
+    R CMD INSTALL --library=\"$PWD/.Rlib\" ~/.local/share/nvim/lazy/R.nvim/nvimcom
   "
 )
 ```
 
-Two things worth pointing at:
+What each line does and why:
 
-- **Prepending, not overwriting**, `R_LIBS_SITE`. Nix's R wrapper
-  already sets `R_LIBS_SITE` to a long colon-separated list of every
-  package's store path (that's literally how `dplyr`, `ggplot2`, and
-  their dependencies become visible to R under nix). A bare
-  `export R_LIBS_SITE=$PWD/.Rlib` clobbers that list and all nix-built
-  packages disappear from `.libPaths()`. We had to learn this the
-  hard way.
-- **Why `R_LIBS_SITE` and not `R_LIBS_USER`**. The `.Rprofile` that
-  `rix::rix_init()` writes explicitly strips any entry matching
-  `R_LIBS_USER` out of `.libPaths()` for purity. It does *not* touch
-  `R_LIBS_SITE`, so that's the channel we use.
+- **`export R_LIBS_SITE=...`** — **Prepending, not overwriting**,
+  `R_LIBS_SITE`. Nix's R wrapper already sets `R_LIBS_SITE` to a long
+  colon-separated list of every package's store path (that's literally
+  how `dplyr`, `ggplot2`, and their dependencies become visible to R
+  under nix). A bare `export R_LIBS_SITE=$PWD/.Rlib` clobbers that
+  list and all nix-built packages disappear from `.libPaths()`. We had
+  to learn this the hard way. We use `R_LIBS_SITE` rather than
+  `R_LIBS_USER` because the `.Rprofile` that `rix::rix_init()` writes
+  explicitly strips any entry matching `R_LIBS_USER` out of
+  `.libPaths()` for purity. It does *not* touch `R_LIBS_SITE`, so
+  that's the channel we use. (`R_LIBS` also works as an alternative.)
+
+- **`mkdir -p "$PWD/.Rlib"`** — Ensures the project-local library
+  directory exists before `R CMD INSTALL` tries to write into it.
+
+- **`mkdir -p "$HOME/R/x86_64-pc-linux-gnu-library/4.4"`** — **This
+  is the critical line that defuses the `.Rprofile` footgun** (issue
+  #2 above). By creating the default `R_LIBS_USER` directory, R
+  includes it in `.libPaths()` at startup. This means rix's `grep()`
+  call finds a real match (index `c(N)` instead of `integer(0)`), and
+  `current_paths[-c(N)]` removes *only that one path* instead of
+  wiping everything via `[-integer(0)]`. Our `.Rlib` and all the nix
+  store paths survive. **The R version in this path must match your
+  `r_ver` argument** (e.g., `4.4` for `r_ver = "4.4.2"`, `4.5` for
+  `r_ver = "4.5.1"`).
+
+- **`R CMD INSTALL ...`** — Compiles and installs R.nvim's companion
+  `nvimcom` package into `.Rlib` at shell entry, so R.nvim never
+  needs to build it at runtime. This runs on every `nix-shell` entry;
+  if nvimcom is already current it finishes in under a second.
 
 ### 2. `default.nix`
 
@@ -101,17 +153,12 @@ be lost on the next regeneration; keep the customisation in
 
 ### 3. Project-local R library `./.Rlib`
 
-Populated **once** with R.nvim's vendored `nvimcom` source, compiled
-against the nix-store R:
+The `shell_hook` above handles everything automatically: it creates
+`.Rlib`, installs `nvimcom` into it, and exports the path. On every
+`nix-shell` entry, `R CMD INSTALL` re-runs — if `nvimcom` is already
+current this finishes in under a second.
 
-```sh
-cd ~/Documents/test
-mkdir -p .Rlib
-nix-shell default.nix -A shell --run \
-  'R CMD INSTALL --library=.Rlib ~/.local/share/nvim/lazy/R.nvim/nvimcom'
-```
-
-Why this works even though `rix`'s `.Rprofile` overrides
+Why `R CMD INSTALL` works even though `rix`'s `.Rprofile` overrides
 `install.packages()`: `R CMD INSTALL` is a separate subcommand that
 does not go through `install.packages()`, so the override does not
 intercept it. `nvimcom` is a self-contained R package (`DESCRIPTION`,
@@ -175,25 +222,18 @@ it; regenerate it on each machine. If you need a truly reproducible
 
 ### 2. You have to rebuild `.Rlib` when things change
 
-Situations that require re-running the `R CMD INSTALL` command:
+Because the `shell_hook` runs `R CMD INSTALL` on every `nix-shell`
+entry, most of these are handled automatically — a new shell session
+recompiles `nvimcom` against the current R. You may still need to
+`rm -rf .Rlib/nvimcom` and re-enter `nix-shell` if:
 
-- **R.nvim updates `nvimcom`.** Check
-  `~/.local/share/nvim/lazy/R.nvim/nvimcom/DESCRIPTION` — if the
-  `Version:` field has moved relative to what's in `.Rlib/nvimcom/DESCRIPTION`,
-  rebuild. R.nvim itself will also complain if the loaded nvimcom is
-  older than what the plugin expects.
-- **You bump R (e.g. `r_ver = "4.4.2"` → `"4.5.0"`).** R packages with
-  compiled code (and `nvimcom` has `.c` files) are built against a
-  specific R ABI. A new R means rebuilding.
-- **You change `nixpkgs` pin in `default.nix`** in a way that moves
-  R's minor version or C toolchain — same reason as above.
-- **You delete `.Rlib`** or move the project directory in a way that
-  breaks the absolute path baked into some compiled artifacts (rare,
-  but possible).
-
-There is no automation watching for any of the above. It's a manual
-step. A reasonable habit: rerun the `R CMD INSTALL` line whenever you
-rerun `generate_env.R` for a non-trivial reason.
+- **You bump R (e.g. `r_ver = "4.4.2"` → `"4.5.0"`).** Remember to
+  also update the `mkdir` path in the shell_hook to match the new
+  minor version (e.g., `4.4` → `4.5`).
+- **R.nvim updates `nvimcom`** and the stale compiled artifacts in
+  `.Rlib` confuse the install. A clean rebuild fixes this.
+- **You move the project directory** and cached compiled artifacts
+  contain stale absolute paths (rare).
 
 ### 3. `.Rlib` is path-sensitive
 
@@ -230,7 +270,24 @@ inside R because you forgot, you'll get the rix stop() message. That's
 the intended rix behaviour; the right response is still to add the
 package to `r_pkgs` in `generate_env.R` and regenerate.
 
-### 6. R.nvim's `nvim_echo` bug is unfixed upstream (as of writing)
+### 6. The rix `.Rprofile` footgun should be reported upstream
+
+The `current_paths[-integer(0)]` bug in `rix::rix_init()`'s generated
+`.Rprofile` is worth reporting to https://github.com/ropensci/rix.
+The one-line fix on their end would be:
+
+```r
+# before
+new_paths <- current_paths[-user_dir]
+
+# after
+new_paths <- if (length(user_dir)) current_paths[-user_dir] else current_paths
+```
+
+Until that lands, the `mkdir` workaround in the shell_hook is the
+least-invasive local fix.
+
+### 7. R.nvim's `nvim_echo` bug is unfixed upstream (as of writing)
 
 The traceback at `server.lua:34` is a real R.nvim bug (wrong arg shape
 for `vim.api.nvim_echo`). With `nvimcom` now installed correctly,
