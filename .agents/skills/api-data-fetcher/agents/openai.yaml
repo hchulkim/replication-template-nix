@@ -1,0 +1,4 @@
+interface:
+  display_name: "API Data Fetcher"
+  short_description: "Fetch structured data from external APIs"
+  default_prompt: "Use $api-data-fetcher to fetch data from an API and document the workflow."

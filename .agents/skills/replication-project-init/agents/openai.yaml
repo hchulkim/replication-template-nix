@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Init"
+  short_description: "Set up a project from this replication template"
+  default_prompt: "Use $replication-project-init to set up this replication project, wire the symlinks, and prepare the environment."

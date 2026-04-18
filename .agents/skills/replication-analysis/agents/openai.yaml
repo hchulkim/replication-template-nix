@@ -1,0 +1,4 @@
+interface:
+  display_name: "Replication Analysis"
+  short_description: "Implement numbered build and analysis scripts"
+  default_prompt: "Use $replication-analysis to implement the build or analysis scripts for this issue."

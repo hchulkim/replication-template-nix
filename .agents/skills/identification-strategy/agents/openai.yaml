@@ -1,0 +1,4 @@
+interface:
+  display_name: "Identification Strategy"
+  short_description: "Design or audit an empirical identification strategy"
+  default_prompt: "Use $identification-strategy to propose or review the empirical identification strategy for this question."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interview Me"
+  short_description: "Elicit a project idea through guided questions"
+  default_prompt: "Use $interview-me to elicit and sharpen this research idea through targeted questions."

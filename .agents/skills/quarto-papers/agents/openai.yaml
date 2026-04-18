@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quarto Papers"
+  short_description: "Work on paper workflows built with Quarto"
+  default_prompt: "Use $quarto-papers to structure or revise this paper workflow in Quarto."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual Audit"
+  short_description: "Audit slide or paper visuals for layout issues"
+  default_prompt: "Use $visual-audit to audit the visual layout of this slide deck or paper output."

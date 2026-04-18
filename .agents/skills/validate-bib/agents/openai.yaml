@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validate Bibliography"
+  short_description: "Check citations against bibliography entries"
+  default_prompt: "Use $validate-bib to check citations in this project against the bibliography."

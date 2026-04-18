@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Paper"
+  short_description: "Simulate referee-style review of a paper draft"
+  default_prompt: "Use $review-paper to review this paper like a referee and produce a structured report."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Literature Review"
+  short_description: "Survey papers and position an economics contribution"
+  default_prompt: "Use $literature-review to survey the literature on this topic and outline the contribution gap."

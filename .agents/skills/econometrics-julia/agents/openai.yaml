@@ -1,0 +1,4 @@
+interface:
+  display_name: "Econometrics Julia"
+  short_description: "Write or review econometrics workflows in Julia"
+  default_prompt: "Use $econometrics-julia to implement or review this econometrics workflow in Julia."

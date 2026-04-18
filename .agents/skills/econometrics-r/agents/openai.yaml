@@ -1,0 +1,4 @@
+interface:
+  display_name: "Econometrics R"
+  short_description: "Write or review econometrics workflows in R"
+  default_prompt: "Use $econometrics-r to implement or review this econometrics workflow in R."

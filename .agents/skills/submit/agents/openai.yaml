@@ -1,0 +1,4 @@
+interface:
+  display_name: "Submit"
+  short_description: "Run final submission checks and package materials"
+  default_prompt: "Use $submit to prepare this project for journal submission."

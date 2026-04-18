@@ -1,0 +1,4 @@
+interface:
+  display_name: "Journal"
+  short_description: "Write or update research journal entries"
+  default_prompt: "Use $journal to draft or update the research journal for this project."

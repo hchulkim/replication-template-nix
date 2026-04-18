@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deploy"
+  short_description: "Deploy or publish project artifacts safely"
+  default_prompt: "Use $deploy to prepare and verify deployment steps for this project artifact."

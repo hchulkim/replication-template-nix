@@ -1,0 +1,4 @@
+interface:
+  display_name: "Talk From Paper"
+  short_description: "Turn a paper into a seminar or conference talk"
+  default_prompt: "Use $talk-from-paper to turn this paper into a format-appropriate talk outline and slide plan."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Context Status"
+  short_description: "Summarize current session state and preserved context"
+  default_prompt: "Use $context-status to summarize the current session state and preserved files."

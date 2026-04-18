@@ -1,0 +1,4 @@
+interface:
+  display_name: "Compile LaTeX"
+  short_description: "Compile LaTeX papers or slide decks reproducibly"
+  default_prompt: "Use $compile-latex to compile this LaTeX target and summarize any warnings."

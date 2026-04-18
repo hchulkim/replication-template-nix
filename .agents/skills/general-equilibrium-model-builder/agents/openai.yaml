@@ -1,0 +1,4 @@
+interface:
+  display_name: "GE Model Builder"
+  short_description: "Build or explain general equilibrium model workflows"
+  default_prompt: "Use $general-equilibrium-model-builder to structure this general equilibrium model workflow."

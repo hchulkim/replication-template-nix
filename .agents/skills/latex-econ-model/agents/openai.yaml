@@ -1,0 +1,4 @@
+interface:
+  display_name: "LaTeX Econ Model"
+  short_description: "Typeset economics model notation in LaTeX"
+  default_prompt: "Use $latex-econ-model to typeset this economics model cleanly in LaTeX."

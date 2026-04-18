@@ -1,0 +1,4 @@
+interface:
+  display_name: "Target Journal"
+  short_description: "Recommend journal targets for a paper draft"
+  default_prompt: "Use $target-journal to recommend appropriate journals for this paper and explain the fit."

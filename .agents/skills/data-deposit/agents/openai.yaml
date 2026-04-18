@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Deposit"
+  short_description: "Prepare repository materials for data deposit"
+  default_prompt: "Use $data-deposit to prepare this project for data or code deposit."

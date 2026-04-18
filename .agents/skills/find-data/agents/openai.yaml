@@ -1,0 +1,4 @@
+interface:
+  display_name: "Find Data"
+  short_description: "Find and assess datasets for a research question"
+  default_prompt: "Use $find-data to identify and assess datasets for this research question."

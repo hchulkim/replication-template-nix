@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Ideation"
+  short_description: "Generate and sharpen research project ideas"
+  default_prompt: "Use $research-ideation to generate and sharpen research ideas on this topic."

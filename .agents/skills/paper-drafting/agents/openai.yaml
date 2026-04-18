@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Drafting"
+  short_description: "Draft or revise economics paper sections"
+  default_prompt: "Use $paper-drafting to draft or revise this paper section using the existing results and notes."

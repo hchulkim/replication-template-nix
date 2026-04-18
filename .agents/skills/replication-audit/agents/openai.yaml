@@ -1,0 +1,4 @@
+interface:
+  display_name: "Replication Audit"
+  short_description: "Audit the package for reproducibility and submission readiness"
+  default_prompt: "Use $replication-audit to audit this replication package for reproducibility and submission readiness."

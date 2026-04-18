@@ -72,8 +72,10 @@ project-name/
 │       │   └── 02_robustness.R
 │       └── 02_issue_name/
 │           └── 01_hetero.R
-├── .claude/                      # Claude Code configuration
+├── .agents/skills/               # Local Codex skills for research workflows
+├── .claude/                      # Legacy Claude Code configuration kept as reference
 ├── .github/workflows/            # GitHub Actions
+├── AGENTS.md                     # Repo-level Codex workflow instructions
 ├── generate_env.R                # rix/nix environment definition
 ├── generate_env_python.R         # Alternative: R + Python environment
 ├── Dockerfile                    # Containerized replication
@@ -115,6 +117,75 @@ The numbered folders (e.g., `01_`, `02_`) correspond to **GitHub issues**. This 
 | #02 Main regression | `code/analysis/02_main_reg/` | — | `output/02_main_reg/tables/`, `output/02_main_reg/figures/` |
 
 This makes it easy to trace any result back to the issue that produced it.
+
+## 1.1 AI coding workflow
+
+This template now includes a Codex-oriented LLM setup in addition to the older Claude configuration.
+
+### Where the AI instructions live
+
+- `AGENTS.md` — repo-level instructions for Codex
+- `.agents/skills/` — small reusable Codex skills for common research tasks
+- `.claude/` — older Claude-specific setup, kept mainly as reference material
+- `CLAUDE_TO_CODEX_SKILL_MAP.md` — inventory of every legacy Claude skill and its current Codex status
+
+### What the Codex setup can do
+
+- Bootstrap a new project from this template
+- Survey literature and draft contribution memos
+- Identify and compare candidate datasets
+- Design or audit identification strategies
+- Implement build and analysis scripts in the numbered issue workflow
+- Review research code for reproducibility and output hygiene
+- Draft or revise paper sections from existing results
+- Simulate referee-style paper reviews before submission
+- Draft point-by-point referee responses
+- Recommend target journals and submission strategy
+- Check citations against bibliography entries
+- Audit the replication package before sharing or submission
+- Turn a paper into a seminar or conference talk outline
+
+### Design principle for the AI setup
+
+The Codex skills are intentionally short at the top level. Each `SKILL.md` gives the trigger and the workflow, while longer rubrics and templates live in `references/`. This keeps the agent instructions readable and avoids bloated prompt files.
+
+### Reproducibility defaults for AI-assisted execution
+
+- Run R work through `nix-shell`, preferably `nix-shell --run "Rscript ..."`
+- Run Python work through `uv run ...`
+- Keep Python dependencies reflected in `requirements.txt` or the chosen Python environment file
+
+### Current local Codex skills
+
+- `api-data-fetcher`
+- `compile-latex`
+- `context-status`
+- `data-deposit`
+- `deploy`
+- `econometrics-julia`
+- `econometrics-r`
+- `find-data`
+- `general-equilibrium-model-builder`
+- `identification-strategy`
+- `interview-me`
+- `journal`
+- `latex-econ-model`
+- `learn`
+- `replication-project-init`
+- `literature-review`
+- `paper-drafting`
+- `quarto-papers`
+- `replication-analysis`
+- `replication-audit`
+- `research-code-review`
+- `research-ideation`
+- `review-paper`
+- `respond-to-referee`
+- `submit`
+- `talk-from-paper`
+- `target-journal`
+- `validate-bib`
+- `visual-audit`
 
 ## 2. Requirements
 

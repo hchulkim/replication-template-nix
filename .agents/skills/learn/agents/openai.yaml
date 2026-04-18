@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learn"
+  short_description: "Capture reusable lessons from project work"
+  default_prompt: "Use $learn to capture a reusable lesson from this project work."

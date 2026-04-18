@@ -1,0 +1,4 @@
+interface:
+  display_name: "Respond To Referee"
+  short_description: "Draft point-by-point referee responses"
+  default_prompt: "Use $respond-to-referee to draft a point-by-point response to these referee comments."

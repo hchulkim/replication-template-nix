@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Code Review"
+  short_description: "Review research scripts for reproducibility and polish"
+  default_prompt: "Use $research-code-review to review these research scripts for reproducibility, output hygiene, and style."
