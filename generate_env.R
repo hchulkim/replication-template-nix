@@ -10,10 +10,14 @@ rix(
   overwrite = TRUE,
   shell_hook = "
     # Make R.nvim's vendored nvimcom package available without writing
-    # to a global R library. One-time install:
-    #   R CMD INSTALL --library=.Rlib \\
-    #     ~/.local/share/nvim/lazy/R.nvim/nvimcom
-    # rix's .Rprofile strips R_LIBS_USER but leaves R_LIBS_SITE alone.
+    # to a global R library. rix's .Rprofile strips R_LIBS_USER but
+    # leaves R_LIBS_SITE alone.
     export R_LIBS_SITE=\"$PWD/.Rlib:$R_LIBS_SITE\"
+    mkdir -p \"$PWD/.Rlib\"
+    # Force make to rebuild rnvimserver on every shell entry so its ELF
+    # interpreter matches the current shell's glibc (prevents breakage
+    # after nix-store --gc if the old glibc path is no longer present).
+    rm -f ~/.local/share/nvim/lazy/R.nvim/nvimcom/src/apps/rnvimserver
+    R CMD INSTALL --library=\"$PWD/.Rlib\" ~/.local/share/nvim/lazy/R.nvim/nvimcom
   "
 )
