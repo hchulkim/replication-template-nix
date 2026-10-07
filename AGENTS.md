@@ -12,6 +12,11 @@ could materially change results, explain the conflict and ask before proceeding.
 
 ## Working style
 
+- Treat coding and presentation preferences below as defaults to adapt to the task
+  and surrounding code. They should support readability and review, not require
+  unnecessary rewrites. Data boundaries and research-integrity safeguards still apply.
+- Prefer simple, easy-to-understand code. Improve efficiency where useful, especially
+  for large data, without sacrificing clarity for small performance gains.
 - Read only the files and surrounding context needed for the task. Consult Makefiles,
   configuration, documentation, and upstream code when the proposed change depends on
   them; do not inventory the repository by default.
@@ -94,6 +99,8 @@ accurate; update the modified date only when repository convention requires it.
 
 - Use short, labeled logical sections and comments for purpose, assumptions, and
   non-obvious choices. Do not narrate obvious syntax.
+- Separate logical groups of statements with blank lines so the flow is easy to read
+  and review; avoid spacing every statement apart mechanically.
 - Add a brief adjacent comment explaining each data input.
 - Keep console output limited to useful progress and validation messages.
 
@@ -107,6 +114,9 @@ accurate; update the modified date only when repository convention requires it.
   `<-`, `snake_case`, `TRUE`/`FALSE`, spaces around operators and after commas, and
   roughly 100-character lines when clarity permits.
 - Prefer named vectors/lists or small functions over copied specifications.
+- Prefer vectorized operations or functional patterns such as `lapply()` for repeated
+  work when they make the intent clearer. A straightforward loop is appropriate when
+  it is easier to follow; avoid convoluted replacements merely to eliminate loops.
 
 ### Data manipulation
 
@@ -122,6 +132,12 @@ accurate; update the modified date only when repository convention requires it.
   matches the estimand, and document consequential filtering.
 - Set a seed immediately before randomized work and explain why randomness is used.
 - Assert essential invariants with clear checks instead of printing large objects.
+- Keep conditionals and assertions focused on meaningful risks, such as missing
+  required inputs, invalid join keys, or unexpected sample changes. Avoid repetitive
+  `if` branches and `stopifnot()` calls for conditions already guaranteed by the code.
+  Remove temporary debugging checks once they have served their purpose, but retain
+  checks that protect correctness on future runs; one successful run is not enough
+  reason to remove those safeguards.
 
 ## Statistical analysis and outputs
 
@@ -145,6 +161,36 @@ accurate; update the modified date only when repository convention requires it.
   installed version, including `.tex`, `.md`, `.html`, `.pdf`, `.png`, and `.jpg`.
   Ensure the object's format matches the file extension; use another appropriate
   writer only when the output is not a kable object.
+
+### Suggested table formatting
+
+Use these as starting points for new tables, adapting them to the model, audience,
+and existing project conventions. Do not restyle existing tables incidentally.
+
+- For LaTeX regression tables, a useful `fixest::etable()` default is `tex = TRUE`,
+  `se.below = TRUE`, `digits = 3`, `style.tex = fixest::style.tex("aer")`, and
+  `fitstat = ~ n + r2` when those statistics suit the model. Use descriptive column
+  headers and a named label dictionary through `dict` or `setFixest_dict()`.
+- Prefer standalone `\begin{tabular} ... \end{tabular}` output for inclusion in the
+  manuscript: set `float = FALSE` and use `tabular = "normal"`. Let the manuscript
+  supply the surrounding `table` environment, caption, label, and placement. Use
+  `float = TRUE` and an exported `\begin{table} ... \end{table}` wrapper only when
+  the requested output or document workflow needs it. Set `float` explicitly because
+  supplying an `etable()` caption or label can otherwise enable the wrapper.
+- Use `depvar = FALSE` when column headers already identify the outcomes. Use `keep`
+  only when a table intentionally focuses on selected coefficients, and make included
+  controls and fixed effects clear elsewhere in the table or notes.
+- For new tables without an established significance convention, the template default
+  is `signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1)`. Explain the symbols
+  in the notes and preserve any existing convention unless a change is requested.
+- For non-regression LaTeX tables, start with
+  `kableExtra::kbl(..., format = "latex", booktabs = TRUE)`. Add
+  `kableExtra::kable_styling(latex_options = "striped")` when shading improves
+  readability and suits the publication format. Use `escape = FALSE` only when labels
+  deliberately contain LaTeX and other text has been handled appropriately.
+- Save tables to the configured output directory. Produce Markdown companions from
+  the same finalized content using the appropriate format; LaTeX styling need not
+  carry over. Formatting examples do not authorize overwriting existing outputs.
 
 ## Figures and spatial work
 
