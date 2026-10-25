@@ -102,6 +102,9 @@ accurate; update the modified date only when repository convention requires it.
   non-obvious choices. Do not narrate obvious syntax.
 - Separate logical groups of statements with blank lines so the flow is easy to read
   and review; avoid spacing every statement apart mechanically.
+- Leave clear vertical space between code blocks, sections, and modules (for example,
+  a blank line before each section header and between function definitions) so
+  each unit is easy to scan.
 - Add a brief adjacent comment explaining each data input.
 - Keep console output limited to useful progress and validation messages.
 
@@ -115,6 +118,9 @@ accurate; update the modified date only when repository convention requires it.
   `<-`, `snake_case`, `TRUE`/`FALSE`, spaces around operators and after commas, and
   roughly 100-character lines when clarity permits.
 - Prefer named vectors/lists or small functions over copied specifications.
+- To combine lists of tables, prefer direct functions such as `data.table::rbindlist()`
+  (or `rbind()` for a few objects) over `do.call(rbind, ...)`, which is harder to read
+  and slower for large lists.
 - Prefer vectorized operations or functional patterns such as `lapply()` for repeated
   work when they make the intent clearer. A straightforward loop is appropriate when
   it is easier to follow; avoid convoluted replacements merely to eliminate loops.
