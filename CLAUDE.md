@@ -39,7 +39,7 @@ For projects under `/home/himakun/`, `/home/hchulkim/`, `/Users/hchulkim/`, or
 
 - Run R, Python, and Julia commands—including tests, formatters, package checks, and
   one-line commands—through the repository's Nix environment. Example:
-  `nix-shell --run "Rscript Code/analysis/01_task/01_script.R"`.
+  `nix-shell --run "Rscript code/analysis/1-task/01-script.R"`.
 - Do not bypass Nix if it fails or its entry point is unclear; report the command and
   error.
 - Ask before installing software or language packages, or changing Nix files,
@@ -48,20 +48,38 @@ For projects under `/home/himakun/`, `/home/hchulkim/`, `/Users/hchulkim/`, or
 ## Repository and data boundaries
 
 - The code repository contains source and documentation. Raw data, generated data,
-  tables, figures, reports, and other outputs belong in the configured project data
-  directory.
+  tables, figures, reports, and other outputs belong under `data/` and `output/`
+  (see layout below), never in `code/`.
 - Never modify `data/raw/` or overwrite existing analysis/output unless the user
   explicitly requests it.
 - Preserve actual path casing. Never hardcode a user's absolute path in source code.
 - Use `here::here()` (or `here()` after loading `here`) for project paths and rely on
-  the data root's `.here` file. Never use `setwd()`.
+  the `.here` file at the repository root. Never use `setwd()`.
 - Follow the existing code-to-data-root mapping. Ask only if multiple plausible roots
   would lead to different results.
 - Create required output directories without deleting existing contents.
 
-The expected layout is a code repository with `Code/pipeline.mk`, task-level `.mk`
-files and scripts under `Code/build/` or `Code/analysis/`, paired with a separate data
-root containing `.here`, `data/raw/`, `data/build/`, and `output/`.
+### Layout
+
+Each task uses one name (`<task>`, chosen by the user) across all trees:
+
+- `code/build/<task>/`: build scripts, `00-config.R`, and the task `task.mk`.
+- `code/analysis/<task>/`: analysis scripts and the task `task.mk`.
+- `data/raw/`: source data; read-only.
+- `data/build/<task>/`: cleaned or intermediate data written by `code/build/<task>/`.
+- `output/<task>/tables/` and `output/<task>/figures/`: results written by
+  `code/analysis/<task>/` (tables in `tables/`, figures in `figures/`).
+- `code/pipeline.mk` includes every task `.mk`; the root `Makefile` includes it.
+
+New projects use lowercase `code/`; some older projects use `Code/`, so preserve
+whatever casing the repository already has. `.here` marks the project root for
+`here()`. `data/` and `output/` are either directories under that root or symlinks to
+a shared data root (e.g. Dropbox); `here("data", ...)` and `here("output", ...)`
+resolve either way. Do not replace symlinks or move data into the code repository.
+
+A script writes only to its own task's `data/build/<task>/` or `output/<task>/`
+directories. Read another task's results only from its `data/build/<task>/` outputs
+and register that file as a Make dependency.
 
 ## Pipeline changes
 
@@ -69,7 +87,7 @@ Apply this section when adding or modifying a research script, task, dependency,
 execution order:
 
 - Read the affected task-level `.mk` file and the relevant part of
-  `Code/pipeline.mk`.
+  `code/pipeline.mk`.
 - Register every research script in its task-level `.mk` file as an executed step or
   explicit dependency, with explicit inputs and outputs. Register every task in the
   master pipeline.
@@ -84,12 +102,6 @@ execution order:
   narrower checks and state the limitation.
 
 ## R scripts
-
-When creating or substantially changing an R data-processing, modeling, table,
-figure, or spatial-analysis script, read
-[`docs/agent-guides/r-best-practices.md`](docs/agent-guides/r-best-practices.md) for
-project examples. Skip that guide for minor comments, renames, formatting-only edits,
-and non-R tasks. Treat its examples as adaptable patterns, not mandatory templates.
 
 ### Header and organization
 
@@ -118,12 +130,12 @@ accurate; update the modified date only when repository convention requires it.
   `<-`, `snake_case`, `TRUE`/`FALSE`, spaces around operators and after commas, and
   roughly 100-character lines when clarity permits.
 - Prefer named vectors/lists or small functions over copied specifications.
-- To combine lists of tables, prefer direct functions such as `data.table::rbindlist()`
-  (or `rbind()` for a few objects) over `do.call(rbind, ...)`, which is harder to read
-  and slower for large lists.
-- Prefer vectorized operations or functional patterns such as `lapply()` for repeated
-  work when they make the intent clearer. A straightforward loop is appropriate when
-  it is easier to follow; avoid convoluted replacements merely to eliminate loops.
+- Default to a functional style: use `lapply()`/`Map()` (or vectorized operations)
+  for repeated work. Use a `for` loop only when iterations depend on each other or
+  the loop is clearly simpler.
+- Bind tables with `data.table::rbindlist()` (lists of tables) or `rbind()` (a few
+  named objects); do not use `do.call(rbind, ...)`. Likewise prefer direct functions
+  such as `Reduce()` or `merge()` over `do.call()` wrappers when one exists.
 
 ### Data manipulation
 
@@ -153,6 +165,8 @@ accurate; update the modified date only when repository convention requires it.
 - Use `fixest::setFixest_dict()` for publication labels, `fixest::etable()` for
   regression tables, and `broom::tidy()` for programmatic coefficient extraction.
   Use `texreg` only when `etable()` cannot support the required model or table.
+- Write regression `.tex` tables with `fixest::etable(..., tex = TRUE,
+  style.tex = fixest::style.tex("aer"))`; keep an existing table's style unless asked.
 - Do not broadly suppress estimation errors or silently omit failed required models.
 - Preserve existing specifications when adding new ones. Give new models and outputs
   distinct, descriptive names.
@@ -195,7 +209,7 @@ and existing project conventions. Do not restyle existing tables incidentally.
   `kableExtra::kable_styling(latex_options = "striped")` when shading improves
   readability and suits the publication format. Use `escape = FALSE` only when labels
   deliberately contain LaTeX and other text has been handled appropriately.
-- Save tables to the configured output directory. Produce Markdown companions from
+- Save tables to `output/<task>/tables/` and figures to `output/<task>/figures/`. Produce Markdown companions from
   the same finalized content using the appropriate format; LaTeX styling need not
   carry over. Formatting examples do not authorize overwriting existing outputs.
 
