@@ -38,7 +38,7 @@ For projects under `/home/himakun/`, `/home/hchulkim/`, `/Users/hchulkim/`, or
 
 - Run R, Python, and Julia commands—including tests, formatters, package checks, and
   one-line commands—through the repository's Nix environment. Example:
-  `nix-shell --run "Rscript Code/analysis/01_task/01_script.R"`.
+  `nix-shell --run "Rscript code/analysis/01_task/01_script.R"`.
 - Do not bypass Nix if it fails or its entry point is unclear; report the command and
   error.
 - Ask before installing software or language packages, or changing Nix files,
@@ -53,14 +53,15 @@ For projects under `/home/himakun/`, `/home/hchulkim/`, `/Users/hchulkim/`, or
   explicitly requests it.
 - Preserve actual path casing. Never hardcode a user's absolute path in source code.
 - Use `here::here()` (or `here()` after loading `here`) for project paths and rely on
-  the data root's `.here` file. Never use `setwd()`.
+  the `.here` file at the repository root. Never use `setwd()`.
 - Follow the existing code-to-data-root mapping. Ask only if multiple plausible roots
   would lead to different results.
 - Create required output directories without deleting existing contents.
 
-The expected layout is a code repository with `Code/pipeline.mk`, task-level `.mk`
-files and scripts under `Code/build/` or `Code/analysis/`, paired with a separate data
-root containing `.here`, `data/raw/`, `data/build/`, and `output/`.
+The expected layout is a repository with `.here` at its root, task-level `.mk` files and
+scripts under `code/build/` or `code/analysis/` (included from `code/pipeline.mk` where
+it exists, otherwise registered in the root `Makefile`), and `data/raw/`, `data/build/`,
+and `output/` under the root as directories or symlinks to a shared data root.
 
 ## Pipeline changes
 
@@ -68,7 +69,7 @@ Apply this section when adding or modifying a research script, task, dependency,
 execution order:
 
 - Read the affected task-level `.mk` file and the relevant part of
-  `Code/pipeline.mk`.
+  `code/pipeline.mk` (or the root `Makefile` where no `pipeline.mk` exists).
 - Register every research script in its task-level `.mk` file as an executed step or
   explicit dependency, with explicit inputs and outputs. Register every task in the
   master pipeline.
@@ -83,12 +84,6 @@ execution order:
   narrower checks and state the limitation.
 
 ## R scripts
-
-When creating or substantially changing an R data-processing, modeling, table,
-figure, or spatial-analysis script, read
-[`docs/agent-guides/r-best-practices.md`](docs/agent-guides/r-best-practices.md) for
-project examples. Skip that guide for minor comments, renames, formatting-only edits,
-and non-R tasks. Treat its examples as adaptable patterns, not mandatory templates.
 
 ### Header and organization
 

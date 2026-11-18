@@ -69,7 +69,8 @@ Each task uses one name (`<task>`, chosen by the user) across all trees:
 - `data/build/<task>/`: cleaned or intermediate data written by `code/build/<task>/`.
 - `output/<task>/tables/` and `output/<task>/figures/`: results written by
   `code/analysis/<task>/` (tables in `tables/`, figures in `figures/`).
-- `code/pipeline.mk` includes every task `.mk`; the root `Makefile` includes it.
+- Where `code/pipeline.mk` exists, it includes every task `.mk` and the root `Makefile`
+  includes it. Until then, steps are registered directly in the root `Makefile`.
 
 New projects use lowercase `code/`; some older projects use `Code/`, so preserve
 whatever casing the repository already has. `.here` marks the project root for
@@ -87,7 +88,7 @@ Apply this section when adding or modifying a research script, task, dependency,
 execution order:
 
 - Read the affected task-level `.mk` file and the relevant part of
-  `code/pipeline.mk`.
+  `code/pipeline.mk` (or the root `Makefile` where no `pipeline.mk` exists).
 - Register every research script in its task-level `.mk` file as an executed step or
   explicit dependency, with explicit inputs and outputs. Register every task in the
   master pipeline.
@@ -122,8 +123,8 @@ accurate; update the modified date only when repository convention requires it.
 
 ### Packages, paths, and style
 
-- Load used packages once near the top with one `pacman::p_load(...)` call. Spell
-  `pacman` correctly and do not add unused or unnecessary packages.
+- Load used packages once near the top with one `pacman::p_load(...)` call. Do not
+  add unused or unnecessary packages.
 - Define reused input/output directories once; use `here()` directly for one-off
   paths.
 - Follow the surrounding style when consistent. Otherwise use two-space indentation,
