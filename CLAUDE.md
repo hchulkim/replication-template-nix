@@ -104,8 +104,9 @@ execution order:
 
 ## Statistical analysis and outputs
 
-Detailed R style, data-manipulation, table-formatting, and figure conventions live in
-`.claude/rules/r-scripts.md` and load when working with R files.
+Before creating or substantially editing an R, R Markdown, or Quarto script, read
+`.claude/rules/r-scripts.md` (R style, data manipulation, table formatting, figures)
+if it is not already in context.
 
 
 - Prefer `fixest` for supported regression models. Keep outcome, treatment, controls,
