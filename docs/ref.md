@@ -4,6 +4,10 @@
 
 ### Measuring in Linux
 
+two-step logic: find the PID, then either ask the OS for its peak directly, or poll it over time.
+
+The Linux equivalent of `/usr/bin/time -l` is `/usr/bin/time -v`, which reports Maximum resident set size (kbytes). Linux also tracks a running process’s peak RSS for you automatically, in `/proc/<PID>/status`, under `VmHWM` (“high water mark”) - handy if you forgot to wrap the launch command and the job is already running.
+
 ```
 # peak RAM for the whole run
 /usr/bin/time -v Rscript myscript.R 2>&1 | tee run.log
@@ -19,6 +23,8 @@ done > mem_trace.log
 # with parallel/future workers, sum across the worker tree:
 pstree -p "$PID"
 ```
+
+If your job runs inside a container or a cgroup-managed scheduler (Slurm, PBS, Docker), the cgroup itself tracks a true peak for you - no polling, no race against process exit - via `memory.peak` (cgroup v2) or `memory.max_usage_in_bytes` (cgroup v1) under `/sys/fs/cgroup/`.... This is often the most reliable number on a shared cluster, since it reflects exactly what the scheduler enforced against.
 
 - [No hard-coded in-text numbers!](https://jpedataeditor.github.io/posts/20260910-latex-macros/)
 
