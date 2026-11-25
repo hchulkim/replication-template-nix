@@ -61,7 +61,10 @@ For projects under `/home/himakun/`, `/home/hchulkim/`, `/Users/hchulkim/`, or
 The expected layout is a repository with `.here` at its root, task-level `.mk` files and
 scripts under `code/build/` or `code/analysis/` (included from `code/pipeline.mk` where
 it exists, otherwise registered in the root `Makefile`), and `data/raw/`, `data/build/`,
-and `output/` under the root as directories or symlinks to a shared data root.
+and `output/` under the root as directories or symlinks to a shared data root. Shared
+pure helper functions live in `R/` (sourced via `source(here("R", "<file>.R"))`), their
+unit tests in `tests/testthat/` (run with `make test`), and small golden reference
+datasets used as test oracles in `tests/fixtures/`.
 
 ## Pipeline changes
 
@@ -109,6 +112,9 @@ accurate; update the modified date only when repository convention requires it.
   `<-`, `snake_case`, `TRUE`/`FALSE`, spaces around operators and after commas, and
   roughly 100-character lines when clarity permits.
 - Prefer named vectors/lists or small functions over copied specifications.
+- Put reusable helpers in `R/` as pure, modular functions: pass inputs as arguments, return
+  results, and do not modify global options (`options()`), the working directory
+  (`setwd()`), or other global state.
 - Do not use `do.call()`. For row binding, prefer direct `rbind()` calls for a few
   objects or `data.table::rbindlist()` for a list of objects.
 - Prefer vectorized operations or functional patterns such as `lapply()` for repeated
@@ -127,6 +133,10 @@ accurate; update the modified date only when repository convention requires it.
   work.
 - Handle missing and non-finite values deliberately. Use `na.rm = TRUE` only when it
   matches the estimand, and document consequential filtering.
+- Account for `NA` and `NULL` explicitly, and do not assume a vector or table is
+  non-empty without checking when emptiness is possible.
+- Guard against silent vector recycling: verify lengths before element-wise operations
+  on vectors that could differ (e.g., `stopifnot(length(a) == length(b))`).
 - Set a seed immediately before randomized work and explain why randomness is used.
 - Assert essential invariants with clear checks instead of printing large objects.
 - Keep conditionals and assertions focused on meaningful risks, such as missing
@@ -135,6 +145,21 @@ accurate; update the modified date only when repository convention requires it.
   Remove temporary debugging checks once they have served their purpose, but retain
   checks that protect correctness on future runs; one successful run is not enough
   reason to remove those safeguards.
+
+## Python scripts
+
+Python scripts follow the same task layout, header, and Make-registration rules as R
+scripts.
+
+- Do not use `inplace=True` on pandas objects. Return new DataFrames via `.assign()`,
+  `.copy()`, or other functional transformations.
+- Never define functions with mutable default arguments (e.g., `def f(x=[])`); use
+  `None` and create the object inside the function.
+- Keep helper functions pure. Do not reference variables from outer or global scope;
+  pass all inputs explicitly as arguments.
+- Never use broad `try: ... except Exception:` blocks that return `None` or otherwise
+  hide failures. Catch only specific, expected exceptions; let unexpected errors raise.
+- Never assert direct float equality (`==`). Use `pytest.approx()` or `np.isclose()`.
 
 ## Statistical analysis and outputs
 
@@ -210,6 +235,13 @@ Match validation effort to the change:
 - Search for stale paths, filenames, step numbers, task names, or output references
   only when the change could create them.
 - Use the full pipeline criteria in “Pipeline changes”; do not run it by default.
+- Treat tests, golden datasets, and reference fixtures (e.g., under `tests/` or
+  `tests/fixtures/`) as oracles. Never modify assertions or reference data to make
+  failing code pass; if a check fails against an oracle, fix the implementation, or
+  ask if the oracle itself appears wrong.
+- When refactoring data-wrangling code, verify output equivalence against existing
+  reference outputs or fixtures where they exist.
+- Compare floating-point results with a tolerance, not exact equality.
 - Report what ran, what passed, and what could not be verified. Never claim success
   for a command or pipeline that was not run successfully in the current state.
 

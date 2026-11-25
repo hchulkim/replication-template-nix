@@ -2,7 +2,7 @@ library(rix)
 
 rix(
   r_ver = "4.4.2",
-  r_pkgs = c("dplyr", "ggplot2"),
+  r_pkgs = c("dplyr", "ggplot2", "data.table", "here", "pacman", "testthat"),
   system_pkgs = NULL,
   git_pkgs = NULL,
   ide = "none",

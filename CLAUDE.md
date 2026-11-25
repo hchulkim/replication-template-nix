@@ -69,6 +69,10 @@ Each task uses one name (`<task>`, chosen by the user) across all trees:
 - `data/build/<task>/`: cleaned or intermediate data written by `code/build/<task>/`.
 - `output/<task>/tables/` and `output/<task>/figures/`: results written by
   `code/analysis/<task>/` (tables in `tables/`, figures in `figures/`).
+- `R/`: shared pure helper functions, sourced by task scripts with
+  `source(here("R", "<file>.R"))`. Not tied to one task.
+- `tests/testthat/`: unit tests for `R/` helpers, run with `make test`.
+- `tests/fixtures/`: small golden reference datasets used as test oracles.
 - Where `code/pipeline.mk` exists, it includes every task `.mk` and the root `Makefile`
   includes it. Until then, steps are registered directly in the root `Makefile`.
 
@@ -106,8 +110,8 @@ execution order:
 
 Before creating or substantially editing an R, R Markdown, or Quarto script, read
 `.claude/rules/r-scripts.md` (R style, data manipulation, table formatting, figures)
-if it is not already in context.
-
+if it is not already in context. Before creating or substantially editing a Python
+script or notebook, likewise read `.claude/rules/python-scripts.md`.
 
 - Prefer `fixest` for supported regression models. Keep outcome, treatment, controls,
   fixed effects, weights, clustering, and estimation sample visible near the model.
@@ -143,6 +147,13 @@ Match validation effort to the change:
 - Search for stale paths, filenames, step numbers, task names, or output references
   only when the change could create them.
 - Use the full pipeline criteria in “Pipeline changes”; do not run it by default.
+- Treat tests, golden datasets, and reference fixtures (e.g., under `tests/` or
+  `tests/fixtures/`) as oracles. Never modify assertions or reference data to make
+  failing code pass; if a check fails against an oracle, fix the implementation, or
+  ask if the oracle itself appears wrong.
+- When refactoring data-wrangling code, verify output equivalence against existing
+  reference outputs or fixtures where they exist.
+- Compare floating-point results with a tolerance, not exact equality.
 - Report what ran, what passed, and what could not be verified. Never claim success
   for a command or pipeline that was not run successfully in the current state.
 

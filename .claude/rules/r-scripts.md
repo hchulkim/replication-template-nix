@@ -39,6 +39,9 @@ accurate; update the modified date only when repository convention requires it.
   `<-`, `snake_case`, `TRUE`/`FALSE`, spaces around operators and after commas, and
   roughly 100-character lines when clarity permits.
 - Prefer named vectors/lists or small functions over copied specifications.
+- Put reusable helpers in `R/` as pure, modular functions: pass inputs as arguments, return
+  results, and do not modify global options (`options()`), the working directory
+  (`setwd()`), or other global state.
 - Default to a functional style: use `lapply()`/`Map()` (or vectorized operations)
   for repeated work. Use a `for` loop only when iterations depend on each other or
   the loop is clearly simpler.
@@ -58,6 +61,10 @@ accurate; update the modified date only when repository convention requires it.
   work.
 - Handle missing and non-finite values deliberately. Use `na.rm = TRUE` only when it
   matches the estimand, and document consequential filtering.
+- Account for `NA` and `NULL` explicitly, and do not assume a vector or table is
+  non-empty without checking when emptiness is possible.
+- Guard against silent vector recycling: verify lengths before element-wise operations
+  on vectors that could differ (e.g., `stopifnot(length(a) == length(b))`).
 - Set a seed immediately before randomized work and explain why randomness is used.
 - Assert essential invariants with clear checks instead of printing large objects.
 - Keep conditionals and assertions focused on meaningful risks, such as missing

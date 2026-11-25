@@ -72,6 +72,12 @@ project-name/
 │       │   └── 02_robustness.R
 │       └── 02_issue_name/
 │           └── 01_hetero.R
+├── R/                            # Shared pure helper functions (sourced by scripts)
+│   └── clean.R
+├── tests/
+│   ├── testthat/                 # Unit tests for R/ helpers (`make test`)
+│   │   └── test-clean.R
+│   └── fixtures/                 # Golden reference datasets (oracles; do not edit to pass)
 ├── .github/workflows/            # GitHub Actions
 ├── AGENTS.md                     # Repo-level Codex workflow instructions
 ├── generate_env.R                # rix/nix environment definition
